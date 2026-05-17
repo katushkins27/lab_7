@@ -1,5 +1,6 @@
 server\commands\HeadCommand.class
 server\commands\RemoveAllByPriceCommand.class
+server\commands\AuthCommand.class
 server\commands\AddCommand.class
 server\commands\ClearCommand.class
 server\commands\RemoveByIDCommand.class
@@ -16,6 +17,7 @@ server\CollectionManager.class
 server\commands\RemoveAnyByTypeCommand.class
 server\commands\InfoCommand.class
 server\commands\UpdateCommand.class
+server\commands\RegisterCommand.class
 server\commands\RemoveGreaterCommand.class
 server\NetworkProvider.class
 server\Server.class

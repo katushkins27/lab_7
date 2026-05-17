@@ -6,36 +6,12 @@ import java.util.Scanner;
 import java.time.LocalDateTime;
 
 public class ConsoleReader {
-    /**
-     * Сканер для интерактивного ввода с консоли
-     */
     private static Scanner scanner = new Scanner(System.in);
-    /**
-     * Флаг, указывающий на режим выполнения скрипта
-     */
     private static boolean scriptRegime = false;
-    /**
-     * Сканер для чтения из файла скрипта
-     */
     private static Scanner scriptScanner = null;
-    /**
-     * Текущий номер строки в скрипте (для сообщений об ошибках)
-     */
     private static int scriptLineNumber = 0;
-    /**
-     * Флаг, указывающий, был ли уже считан следующий символ методом peek
-     */
     private static boolean hasPeeked = false;
-    /**
-     * Следующая строка, сохранённая при peek
-     */
     private static String nextLine = null;
-
-    /**
-     * Переключает reader в режим выполнения скрипта.
-     *
-     * @param fileScanner сканер для чтения из файла скрипта
-     */
     public static void setScriptRegime(Scanner fileScanner) {
         scriptRegime = true;
         scriptScanner = fileScanner;
@@ -43,10 +19,6 @@ public class ConsoleReader {
         nextLine = null;
         hasPeeked = false;
     }
-
-    /**
-     * Переключает reader в интерактивный режим (ввод с консоли).
-     */
     public static void setInteractiveRegime() {
         scriptRegime = false;
         scriptScanner = null;
@@ -54,22 +26,9 @@ public class ConsoleReader {
         scriptLineNumber = 0;
         hasPeeked = false;
     }
-
-    /**
-     * Проверяет, находится ли reader в режиме выполнения скрипта.
-     *
-     * @return true, если выполняется скрипт, иначе false
-     */
     public static boolean isScriptRegime() {
         return scriptRegime;
     }
-
-    /**
-     * Проверяет, является ли строка командой (для определения границ данных в скрипте).
-     *
-     * @param line проверяемая строка
-     * @return true, если строка содержит команду, иначе false
-     */
     private static boolean commandFlag(String line) {
         if (line == null) return false;
         String str = line.trim().split("\\s+", 2)[0].toLowerCase();
@@ -83,11 +42,6 @@ public class ConsoleReader {
                 str.equals("execute_script") || str.equals("exit");
     }
 
-    /**
-     * Читает следующую строку из источника ввода с учётом peek-а.
-     *
-     * @return следующая строка или null, если достигнут конец ввода
-     */
     private static String readLine() {
         if (hasPeeked) {
             hasPeeked = false;
@@ -103,11 +57,6 @@ public class ConsoleReader {
         return scanner.nextLine();
     }
 
-    /**
-     * Просматривает следующую строку без её извлечения из потока.
-     *
-     * @return следующая строка или null, если строк больше нет
-     */
     public static String peekNextLine() {
         if (!hasPeeked) {
             nextLine = readLine();
@@ -116,15 +65,6 @@ public class ConsoleReader {
         return nextLine;
     }
 
-    /**
-     * Читает следующую команду из скрипта, пропуская пустые строки и комментарии.
-     * <p>
-     * Используется для построчного чтения команд при выполнении скрипта.
-     * Комментарии и пустые строки игнорируются.
-     * </p>
-     *
-     * @return строка с командой или null, если достигнут конец файла
-     */
     public static String readNextCommand() {
         if (!scriptRegime || scriptScanner == null) return null;
 
@@ -148,16 +88,6 @@ public class ConsoleReader {
         return line;
     }
 
-    /**
-     * Читает строку с приглашением.
-     * <p>
-     * В интерактивном режиме выводит приглашение и читает с консоли.
-     * В режиме скрипта читает следующую строку из файла.
-     * </p>
-     *
-     * @param invitation текст приглашения (используется только в интерактивном режиме)
-     * @return прочитанная строка
-     */
     public static String readStr(String invitation) {
         if (scriptRegime) {
             if (hasPeeked) {
@@ -175,13 +105,6 @@ public class ConsoleReader {
         }
     }
 
-    /**
-     * Читает целое число с приглашением и валидацией.
-     *
-     * @param invitation текст приглашения
-     * @return прочитанное целое число
-     * @throws RuntimeException в режиме скрипта при пустой строке или нечисловом формате
-     */
     public static int readInt(String invitation) {
         while (true) {
             try {
@@ -203,13 +126,6 @@ public class ConsoleReader {
         }
     }
 
-    /**
-     * Читает число с плавающей точкой двойной точности с приглашением и валидацией.
-     *
-     * @param invitation текст приглашения
-     * @return прочитанное число
-     * @throws RuntimeException в режиме скрипта при пустой строке или нечисловом формате
-     */
     public static double readDouble(String invitation) {
         while (true) {
             try {
@@ -231,13 +147,6 @@ public class ConsoleReader {
         }
     }
 
-    /**
-     * Читает непустую строку с приглашением и валидацией.
-     *
-     * @param invitation текст приглашения
-     * @return непустая строка
-     * @throws RuntimeException в режиме скрипта при пустой строке
-     */
     public static String readNotEmptyStr(String invitation) {
         while (true) {
             String input = readStr(invitation).trim();
@@ -252,13 +161,6 @@ public class ConsoleReader {
         }
     }
 
-    /**
-     * Читает целое число типа Long (не null) с приглашением и валидацией.
-     *
-     * @param invitation текст приглашения
-     * @return прочитанное число Long
-     * @throws RuntimeException в режиме скрипта при пустой строке или нечисловом формате
-     */
     public static Long readLongNotNull(String invitation) {
         while (true) {
             try {
@@ -280,13 +182,6 @@ public class ConsoleReader {
         }
     }
 
-    /**
-     * Читает число с плавающей точкой типа Float (не null) с приглашением и валидацией.
-     *
-     * @param invitation текст приглашения
-     * @return прочитанное число Float
-     * @throws RuntimeException в режиме скрипта при пустой строке или нечисловом формате
-     */
     public static Float readFloatNotNull(String invitation) {
         while (true) {
             try {
@@ -308,13 +203,6 @@ public class ConsoleReader {
         }
     }
 
-    /**
-     * Читает название улицы с ограничением длины (не более 61 символа).
-     *
-     * @param invitation текст приглашения
-     * @return название улицы
-     * @throws RuntimeException в режиме скрипта при превышении длины
-     */
     public static String readStreet(String invitation) {
         while (true) {
             String input = readNotEmptyStr(invitation);
@@ -329,14 +217,6 @@ public class ConsoleReader {
         }
     }
 
-    /**
-     * Читает название локации с ограничением длины (не более 777 символов).
-     * Пустая строка интерпретируется как null.
-     *
-     * @param invitation текст приглашения
-     * @return название локации или null, если строка пуста
-     * @throws RuntimeException в режиме скрипта при превышении длины
-     */
     public static String readLocationName(String invitation) {
         while (true) {
             String input = readStr(invitation);
@@ -354,14 +234,6 @@ public class ConsoleReader {
         }
     }
 
-    /**
-     * Читает цену билета (должна быть положительной).
-     * Пустая строка интерпретируется как null.
-     *
-     * @param invitation текст приглашения
-     * @return цена или null, если строка пуста
-     * @throws RuntimeException в режиме скрипта при некорректном значении
-     */
     public static Long readPrice(String invitation) {
         while (true) {
             String input = readStr(invitation).trim();

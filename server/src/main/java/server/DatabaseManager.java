@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class DatabaseManager {
-    private static final String URL = "jdbc:postgresql://pg/studs";
+    //private static final String URL = "jdbc:postgresql://pg/studs";
+    private static final String URL = "jdbc:postgresql://localhost:5432/studs";
     private final String username;
     private final String password;
 
@@ -130,7 +131,7 @@ public class DatabaseManager {
                 t.name as ticket_name,
                 t.coord_x,
                 t.coord_y,
-                t.creation_date
+                t.creation_date,
                 t.price,
                 t.type,
                 t.venue_id,
@@ -163,7 +164,7 @@ public class DatabaseManager {
 
     public Ticket addTicket(Ticket ticket, int userId){
         String sql = """
-               INSERT INTO tickets (ticket_name, coord_x, coord_y, creation_date, price, type, venue_id, user_id)
+               INSERT INTO tickets (name, coord_x, coord_y, creation_date, price, type, venue_id, user_id)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
              """;
         try (Connection connect = getConnection();
@@ -196,20 +197,27 @@ public class DatabaseManager {
     public boolean updateTicket (int id , Ticket newTicket, int userId){
         String sql = """
                 UPDATE tickets
-                            SET name = ?, coord_x = ?, coord_y = ?, price = ?, type = ?
+                            SET name = ?, coord_x = ?, coord_y = ?, price = ?, type = ?, venue_id = ?
                             WHERE id = ? AND user_id = ?
                 """;
         try (Connection connect = getConnection();
-        PreparedStatement stmt = connect.prepareStatement(sql)){
-            stmt.setString(1, newTicket.getName());
-            stmt.setInt(2, newTicket.getCoordinates().getX());
-            stmt.setLong(3, newTicket.getCoordinates().getY());
-            stmt.setObject(4,newTicket.getPrice());
-            stmt.setString(5,newTicket.getType().name());
-            stmt.setInt(6,id);
-            stmt.setInt(7,userId);
-            int updated = stmt.executeUpdate();
-            return updated>0;
+             PreparedStatement stmt = connect.prepareStatement(sql)){
+             stmt.setString(1, newTicket.getName());
+             stmt.setInt(2, newTicket.getCoordinates().getX());
+             stmt.setLong(3, newTicket.getCoordinates().getY());
+             stmt.setObject(4,newTicket.getPrice());
+             stmt.setString(5,newTicket.getType().name());
+
+             Long venueId = null;
+             if (newTicket.getVenue() != null){
+                 venueId = saveVenue(connect, newTicket.getVenue());
+             }
+             stmt.setObject(6, venueId);
+
+             stmt.setInt(7,id);
+             stmt.setInt(8,userId);
+             int updated = stmt.executeUpdate();
+             return updated>0;
         } catch (SQLException e){
             e.printStackTrace();
             return false;
@@ -232,7 +240,7 @@ public class DatabaseManager {
 
     private Long saveVenue(Connection connect, Venue venue) throws SQLException{
         String sql = """
-            INSERT INTO venues (venue_name, capacity, street, zip_code,
+            INSERT INTO venues (name, capacity, street, zip_code,
                                 location_x, location_y, location_z, location_name)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """;

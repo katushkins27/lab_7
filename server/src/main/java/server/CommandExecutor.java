@@ -32,8 +32,8 @@ public class CommandExecutor {
         commands.put("remove_all_by_price",new RemoveAllByPriceCommand());
         commands.put("remove_any_by_type",new RemoveAnyByTypeCommand());
         commands.put("min_by_venue",new MinByVenueCommand());
-        commands.put("auth",new AuthCommand(authManager));
-        commands.put("register",new RegisterCommand(authManager));
+        //commands.put("auth",new AuthCommand(authManager));
+        //commands.put("register",new RegisterCommand(authManager));
     }
 
     public Map<String, Command> getCommands(){

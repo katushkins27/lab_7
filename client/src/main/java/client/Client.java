@@ -14,37 +14,11 @@ public class Client implements AutoCloseable {
 
 
 
-    public Client (String host, int port, Credentials credentials) throws IOException{
-            this.network = new NetworkManager(host, port);
-            this.builder = new RequestBuilder(reader, credentials);
-            this.scriptExecutor = new ScriptExecutor(builder, network);
-            initConsole();
-
-
-    }
-    private void initConsole(){
-        try {
-            Terminal terminal = TerminalBuilder.builder().system(true).build();
-            Completer completer = (reader, line, candidates) -> {
-                String buffer = line.line();
-                String[] parts = buffer.split("\\s+");
-                String prefix = parts[0].toLowerCase();
-                String[] commands = {"add", "show", "update", "remove_by_id", "remove_head",
-                        "head", "clear", "remove_greater", "remove_all_by_price",
-                        "remove_any_by_type", "min_by_venue", "help", "info", "exit", "execute_script"};
-
-                for (String cmd : commands) {
-                    if (cmd.startsWith(prefix)) {
-                        candidates.add(new Candidate(cmd));
-                    }
-                }
-            };
-            reader = LineReaderBuilder.builder().terminal(terminal).completer(completer).build();
-        } catch (IOException e) {
-            System.out.println("Ошибка инициализации jline");
-            reader = null;
-        }
-    }
+    public Client (String host, int port, Credentials credentials, LineReader reader) throws IOException{
+        this.reader = reader;
+        this.network = new NetworkManager(host, port);
+        this.builder = new RequestBuilder(this.reader, credentials);
+        this.scriptExecutor = new ScriptExecutor(builder, network);}
 
     public void start(){
         System.out.println("Клиент запущен.");
@@ -105,6 +79,5 @@ public class Client implements AutoCloseable {
         } catch (IOException e) {
             System.err.println("Ошибка при закрытии соединения: " + e.getMessage());
         }
-        System.out.println("Сеанс завершен!");
     }
 }

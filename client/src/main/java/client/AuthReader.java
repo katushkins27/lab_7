@@ -1,40 +1,33 @@
 package client;
 import common.auth.Credentials;
+import org.jline.reader.LineReader;
 
 //import java.util.Optional;
 import java.util.Scanner;
 public class AuthReader {
-    private static final Scanner scanner = new Scanner(System.in);
-
-    public static Credentials readCredentials(){
+    public static Credentials readCredentials(LineReader reader){
         System.out.println("АВТОРИЗАЦИЯ");
-        System.out.println("Логин: ");
-        String login = scanner.nextLine().trim();
-        System.out.print("Пароль: ");
-        String password = scanner.nextLine();
-        return new Credentials(login,password);
-    }
-
-    public static Credentials readLoginOnly(){
-        System.out.println("Логин: ");
-        String login = scanner.nextLine().trim();
-        return new Credentials(login, "");
-    }
-
-    public static Credentials readPasswordOnly(String login){
-        System.out.println("Пароль: ");
-        String password = scanner.nextLine();
+        String login = reader.readLine("Логин: ").trim();
+        String password = reader.readLine("Пароль: ");
         return new Credentials(login, password);
     }
 
-    public static String readChoice(){
-        System.out.print("> ");
-        return scanner.nextLine().trim().toLowerCase();
+    public static Credentials readLoginOnly(LineReader reader){
+        String login = reader.readLine("Логин: ").trim();
+        return new Credentials(login, "");
     }
 
-    public static String readYesNo(String prompt){
-        System.out.print(prompt);
-        return scanner.nextLine().trim().toLowerCase();
+    public static Credentials readPasswordOnly(LineReader reader, String login){
+        String password = reader.readLine("Пароль: ");
+        return new Credentials(login, password);
+    }
+
+    public static String readChoice(LineReader reader){
+        return reader.readLine("> ").trim().toLowerCase();
+    }
+
+    public static String readYesNo(LineReader reader, String prompt){
+        return reader.readLine(prompt).trim().toLowerCase();
     }
 
 }

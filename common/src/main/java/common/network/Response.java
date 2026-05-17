@@ -21,4 +21,5 @@ public class Response implements Serializable {
     public Object getData(){
         return data;
     }
+    public boolean isSuccess() {return success;}
 }
