@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class DatabaseManager {
-    // private static final String URL = "jdbc:postgresql://pg/studs";
-    private static final String URL = "jdbc:postgresql://localhost:5432/studs";
+    private static final String URL = "jdbc:postgresql://pg/studs";
     private final String username;
     private final String password;
 
@@ -96,6 +95,19 @@ public class DatabaseManager {
         }
     }
 
+    public boolean userExists(String login){
+        String sql = "SELECT id FROM users WHERE login = ?";
+        try (Connection connect = getConnection();
+        PreparedStatement stmt = connect.prepareStatement(sql)){
+            stmt.setString(1,login);
+            ResultSet results = stmt.executeQuery();
+            return results.next();
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean ticketExists(int id, int userId){
         String sql = "SELECT id FROM tickets WHERE id = ? AND user_id = ?";
         try (Connection connect = getConnection();
@@ -118,7 +130,7 @@ public class DatabaseManager {
                 t.name as ticket_name,
                 t.coord_x,
                 t.coord_y,
-                t.creation_date,
+                t.creation_date
                 t.price,
                 t.type,
                 t.venue_id,
@@ -149,7 +161,7 @@ public class DatabaseManager {
         return tickets;
     }
 
-    public Ticket addTicket (Ticket ticket, int userId){
+    public Ticket addTicket(Ticket ticket, int userId){
         String sql = """
                INSERT INTO tickets (ticket_name, coord_x, coord_y, creation_date, price, type, venue_id, user_id)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
