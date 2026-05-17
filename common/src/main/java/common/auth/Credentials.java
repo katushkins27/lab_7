@@ -10,6 +10,6 @@ public class Credentials implements Serializable{
         this.login = login;
         this.password = password;
     }
-    public String getLigin(){return login;}
+    public String getLogin(){return login;}
     public String getPassword(){return password;}
 }

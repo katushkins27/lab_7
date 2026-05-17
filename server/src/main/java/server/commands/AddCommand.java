@@ -8,7 +8,7 @@ import server.CollectionManager;
 import server.DatabaseManager;
 
 public class AddCommand implements Command {
-    private final DataBaseManager dbManager;
+    private final DatabaseManager dbManager;
     private final AuthManager authManager;
 
     public AddCommand(DatabaseManager dbManager, AuthManager authManager) {

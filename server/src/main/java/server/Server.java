@@ -23,10 +23,9 @@ public class Server {
         AuthManager authManager = new AuthManager(dbManager);
         this.collectionManager = new CollectionManager(dbManager);
         this.network = new NetworkProvider(port);
-        this.executor = new CommandExecutor(collectionManager, dbManager, AuthManager());
+        this.executor = new CommandExecutor(collectionManager, dbManager, authManager);
         this.requestHandler = new RequestHandler(executor, authManager);
         this.receivePool = Executors.newFixedThreadPool(RECEIVE_THREADS);
-        collectionManager.loadFromDB();
         logger.info("Сервер инициализирован на порту" + port);
     }
 
@@ -86,9 +85,10 @@ public class Server {
 
     public static void main(String[] args){
         int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
-        String dbUser = System.getenv().getOrDefault("DB_USER", "studs");
-        String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "studs");
-
+        //String dbUser = System.getenv().getOrDefault("DB_USER", "studs");
+        //String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "studs");
+        String dbUser = System.getenv().getOrDefault("DB_USER", "postgres");
+        String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "Cthu2705");
         try {
             Server server = new Server(port, dbUser, dbPassword);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

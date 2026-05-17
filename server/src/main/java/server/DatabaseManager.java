@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class DatabaseManager {
-    private static final String URL = "jdbc:postgresql://pg/studs";
+    // private static final String URL = "jdbc:postgresql://pg/studs";
+    private static final String URL = "jdbc:postgresql://localhost:5432/studs";
     private final String username;
     private final String password;
 
@@ -117,7 +118,7 @@ public class DatabaseManager {
                 t.name as ticket_name,
                 t.coord_x,
                 t.coord_y,
-                t.creation_date
+                t.creation_date,
                 t.price,
                 t.type,
                 t.venue_id,

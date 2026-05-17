@@ -12,7 +12,7 @@ public class CommandExecutor {
     private final AuthManager authManager;
     private final Map<String, Command> commands = new HashMap<>();
 
-    public CommandExecutor(CollectionManager collection, DataBaseManager dbManager, AuthManager authManager){
+    public CommandExecutor(CollectionManager collection, DatabaseManager dbManager, AuthManager authManager){
         this.collection = collection;
         this.dbManager = dbManager;
         this.authManager = authManager;
@@ -32,6 +32,8 @@ public class CommandExecutor {
         commands.put("remove_all_by_price",new RemoveAllByPriceCommand());
         commands.put("remove_any_by_type",new RemoveAnyByTypeCommand());
         commands.put("min_by_venue",new MinByVenueCommand());
+        commands.put("auth",new AuthCommand(authManager));
+        commands.put("register",new RegisterCommand(authManager));
     }
 
     public Map<String, Command> getCommands(){

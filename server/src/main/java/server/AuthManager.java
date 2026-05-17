@@ -8,9 +8,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 public class AuthManager {
-    private final Database dbManager;
+    private final DatabaseManager dbManager;
 
-    public AuthManager(DataBaseManager dbManager){
+    public AuthManager(DatabaseManager dbManager){
         this.dbManager = dbManager;
     }
     public static String hashMD2(String inp){
@@ -29,18 +29,23 @@ public class AuthManager {
     public boolean authenticate(Credentials credentials){
         if (credentials == null) return false;
         String hash = hashMD2(credentials.getPassword());
-        Original<Integer> userId = dbManager.authenticate(credentials.getLigin(), hash);
+        Optional<Integer> userId = dbManager.authenticate(credentials.getLogin(), hash);
         return userId.isPresent();
     }
+
+    public boolean userExists(String login) {
+        return dbManager.userExists(login);
+    }
+
     public int getUserId(Credentials credentials){
         if (credentials == null) return -1;
         String hash = hashMD2(credentials.getPassword());
-        Original<Integer> userId = dbManager.authenticate(credentials.getLigin(), hash);
+        Optional<Integer> userId = dbManager.authenticate(credentials.getLogin(), hash);
         return userId.orElse(-1);
     }
     public boolean register(Credentials credentials){
         if (credentials == null) return false;
         String hash = hashMD2(credentials.getPassword());
-        return dbManager.register(credentials.getLigin(), hash)
+        return dbManager.registers(credentials.getLogin(), hash);
     }
 }

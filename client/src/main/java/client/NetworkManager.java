@@ -73,7 +73,7 @@ public class NetworkManager {
         return null;
     }
     public void close() throws IOException {
-        if (channel != null) channel.close();
+        if (channel != null && channel.isOpen()) channel.close();
     }
 }
 
