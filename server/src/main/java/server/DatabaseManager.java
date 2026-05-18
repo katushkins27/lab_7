@@ -21,9 +21,20 @@ public class DatabaseManager {
     }
 
     private void initTables(){
+        String createUsersSeq = """
+    CREATE SEQUENCE IF NOT EXISTS users_id_seq
+    """;
+
+        String createVenuesSeq = """
+    CREATE SEQUENCE IF NOT EXISTS venues_id_seq
+    """;
+
+        String createTicketsSeq = """
+    CREATE SEQUENCE IF NOT EXISTS tickets_id_seq
+    """;
         String createUsers= """
                 CREATE TABLE IF NOT EXISTS users(
-                id SERIAL PRIMARY KEY,
+                id INT PRIMARY KEY DEFAULT nextval('users_id_seq'),
                 login VARCHAR(50) UNIQUE NOT NULL,
                 password_hash VARCHAR(32) NOT NULL
             )
@@ -31,7 +42,7 @@ public class DatabaseManager {
 
         String createTickets = """
             CREATE TABLE IF NOT EXISTS tickets (
-                id SERIAL PRIMARY KEY,
+                id INT PRIMARY KEY DEFAULT nextval('tickets_id_seq'),
                 name VARCHAR(100) NOT NULL,
                 coord_x INT NOT NULL,
                 coord_y BIGINT NOT NULL,
@@ -45,19 +56,22 @@ public class DatabaseManager {
 
         String createVenues = """
             CREATE TABLE IF NOT EXISTS venues (
-                id SERIAL PRIMARY KEY,
+                id INT PRIMARY KEY DEFAULT nextval('venues_id_seq'),
                 name VARCHAR(100) NOT NULL,
                 capacity INT NOT NULL CHECK (capacity > 0),
                 street VARCHAR(61) NOT NULL,
                 zip_code VARCHAR(20),
                 location_x DOUBLE PRECISION,
-                location_y BIGINT NOT NULL,
-                location_z REAL NOT NULL,
+                location_y BIGINT,
+                location_z REAL,
                 location_name VARCHAR(777)
             )
         """;
 
         try (Connection connect = getConnection()){
+            connect.createStatement().execute(createUsersSeq);
+            connect.createStatement().execute(createVenuesSeq);
+            connect.createStatement().execute(createTicketsSeq);
             connect.createStatement().execute(createUsers);
             connect.createStatement().execute(createVenues);
             connect.createStatement().execute(createTickets);
