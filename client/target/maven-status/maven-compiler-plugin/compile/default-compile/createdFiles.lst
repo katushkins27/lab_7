@@ -1,7 +1,0 @@
-client\Client.class
-client\RequestBuilder.class
-client\ConsoleReader.class
-client\ScriptExecutor.class
-client\NetworkManager.class
-client\Launcher.class
-client\AuthReader.class
